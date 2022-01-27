@@ -1,0 +1,64 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}my-blog-new{% endblock %}
+
+{% block jumbotron %}
+<h1 class="h3">記事の編集ページ</h1>
+{% endblock %}
+{% block body %}
+<form action="" method="post">
+  {% csrf_token %}
+  <p><label for="title_input">記事のタイトル</label></p>
+  <p><input class="form-control" type="text" name="title" id="title_input" value="{{ article.title }}"></p>
+  <p><label　for="text_area">記事の本文</label></p>
+  <p><textarea class="form-control" name="text" id="text_area" cols="30" rows="10">{{ article.text }}</textarea></p>
+  <p><button class="btn btn-primary" type="submit">更新</button><a class="btn btn-warning"
+      href="{% url 'view_article' article.pk%}">編集の取りやめ</a></p>
+</form>
+{% endblock %}
+
+
+<!--{% load static %}
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8" />
+    <title>my-blog-edit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'index' %}">トップページ</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="container">
+
+      <div class="jumbotron">
+        <h1 class="h3">記事の編集ページ</h1>
+      </div>
+
+      <form action="" method="post">
+        {% csrf_token %}
+        <p><label for="title_input">記事のタイトル</label></p>
+        //value=とすることで、inputタグにあらかじめ値を入れることができる
+        <p><input class="form-control" type="text" name="title" id="title_input" value="{{ article.title }}"></p>
+        <p><label　for="text_area">記事の本文</label></p>
+        <textarea>あらかじめ入れておきたい文字列</textarea>
+            //とすることでも、あらかじめ値を入れることができる
+        <p><textarea class="form-control" name="text" id="text_area" cols="30" rows="10">{{ article.text }}</textarea>
+        </p>
+        <p><button class="btn btn-primary" type="submit">更新</button><a class="btn btn-warning"
+            href="{% url 'view_article' article.pk%}">編集の取りやめ</a>
+        </p>
+      </form>
+
+    </div>
+  </body>
+
+</html>-->

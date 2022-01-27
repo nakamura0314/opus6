@@ -1,0 +1,161 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ article.title }}{% endblock %}
+{% block js %}
+<script>
+  function api_like() {
+    var api_url = "{% url 'api_like' article.pk %}";
+    var btn = document.getElementById("like");
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+      if (request.readyState === 4 && request.status === 200) {
+        var received_data = JSON.parse(request.responseText);
+        btn.innerText = received_data.like;
+      }
+    }
+    request.open("GET", api_url);
+    request.send();
+  }
+</script>
+
+{% endblock %}
+
+{% block nav_item %}
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'article_all' %}">一覧へ戻る</a>
+</li>
+{% endblock %}
+
+{% block jumbotron %}
+<h1 class="h3">{{ article.title }}</h1>
+<small>投稿日時 : {{ article.posted_at }}</small>
+<small>最終更新 : {{ article.last_modify }}</small>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-12">
+    <p>{{ article.text }}</p>
+  </div>
+  {% if user.is_superuser %}
+  <p><a class="btn btn-primary text-white" onclick="api_like()">
+      <span class="text-white" id="like">{{ article.like }}</span>いいね！</a></p>
+  {% endif %}
+</div>
+<form action="" method="POST">
+  <p><label for="com">コメント</label></p>
+  {% csrf_token %}
+  <textarea class="form-control" name="text" id="com" cols="30" rows="10" required></textarea>
+  <p><button class="btn btn-primary" type="submit">投稿</button></p>
+</form>
+
+{% for comment in article.comments.all %}
+<div class="card">
+  <div class="card-body">
+    <span>{{ comment.text }}</span>
+    <span><small>{{ comment.posted_at }}</small></span>
+  </div>
+</div>
+{% empty %}
+<p>コメントはありません</p>
+{% endfor %}
+
+{% endblock %}
+
+
+<!--{% load static %}
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ article.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script>
+      //functionで関数を定義する
+      function api_like() {
+        //web APIのURL　いいねを増やす
+        var api_url = "{% url 'api_like' article.pk %}";
+        //getElementByIdで、特定のIDを指定してjavascriptの通信を行う
+        var btn = document.getElementById("like");
+        /*XMLHttpRequestとは、javascriptを使ってブラウザとwebサーバ間の
+        データの送受信を行うオブジェクトである
+        一度全てのデータを読み込んだ後も、ページをリロードすることなく
+        ページ内容を書き換えることが可能
+        下記で、XMLHttpRequestオブジェクトを作成*/
+        var request = new XMLHttpRequest();
+        //onreadystatechangeで、XMLHttpRequestで行われている処理を監視する
+        request.onreadystatechange = function () {
+          /*readyStateとは、処理の状態を示す
+          0〜4の状態があり、0が初期状態、4がリクエスト完了
+          statusとは、HTTPのステータスコードのこと
+          100番台から500番台まであり、200番台は正常に通信が完了していることを示す*/
+          if (request.readyState === 4 && request.status === 200) {
+            /*XMLHttpRequestのレスポンスをJSONで受け取った場合、
+            responseTextで読み取る必要がある*/
+            var received_data = JSON.parse(request.responseText);
+            /*innerTextで、指定したID属性の内容を書き換えることができる
+            received_data.likeとすることで、いいねの数字の部分を書き換える*/
+            btn.innerText = received_data.like;
+          }
+        }
+        //HTTPのGETメソッドとアクセスする場所を指定
+        request.open("GET", api_url);
+        //HTTPリクエストを送信
+        request.send();
+      }
+    </script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'index' %}">トップページ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'article_all' %}">一覧へ戻る</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="container">
+      <div class="jumbotron">
+        <h1 class="h3">{{ article.title }}</h1>
+        <small>投稿日時 : {{ article.posted_at }}</small>
+        <small>最終更新 : {{ article.last_modify }}</small>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <p>{{ article.text }}</p>
+        </div>
+        //いいねボタン
+            urls.pyのlikeを参照して、views.pyのlike関数を参照する
+        <p><a class="btn btn-primary text-white" onclick="api_like()"><span class="text-white" id="like">{{ article.like
+              }}</span>いいね！</a></p>
+      </div>
+      <form action="" method="POST">
+        //labelのfor属性とtextareaのid属性を一致させる
+        <p><label for="com">コメント</label></p>
+        {% csrf_token %}
+        <textarea class="form-control" name="text" id="com" cols="30" rows="10" required></textarea>
+        <p><button class="btn btn-primary" type="submit">投稿</button></p>
+      </form>
+
+      //記事に対するコメントを全件取得
+      {% for comment in article.comments.all %}
+      <div class="card">
+        <div class="card-body">
+          <span>{{ comment.text }}</span>
+          <span>-<small>{{ comment.posted_at }}</small></span>
+        </div>
+      </div>
+      //中身が空だった時の対応
+      {% empty %}
+      <p>コメントはありません</p>
+      {% endfor %}
+
+    </div>
+  </body>
+
+</html>-->
